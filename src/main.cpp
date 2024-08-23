@@ -3,9 +3,9 @@
 #include <TinyGPS++.h>
 
 const int rxPin = 2; // Pino digital 2 para RX
-const int txPin = 3; // Pino digital 3 para TX
+const int txPin = D3; // Pino digital 3 para TX
 
-SoftwareSerial gpsSerial(rxPin, txPin); // Cria um objeto SoftwareSerial
+SoftwareSerial gpsSerial(4, 5); // Cria um objeto SoftwareSerial
 TinyGPSPlus gps;
 
 void setup()
@@ -18,13 +18,27 @@ void setup()
 
 void loop()
 {
-  while (gpsSerial.available())
+  while (gpsSerial.available() > 0)
   {
-    Serial.println("Gps available");
-    char info = gpsSerial.read();
-    if (gps.encode(info))
+  delay(2500);
+  gps.encode(gpsSerial.read());
     {
-      Serial.println(info);
+      Serial.print("Latitude: ");
+      Serial.println(gps.location.lat(), 6);
+      Serial.print("Longetude ");
+      Serial.println(gps.location.lng(), 6);
+      Serial.print("Altitude: ");
+      Serial.println(gps.altitude.meters());
+      Serial.print("Horario em minuto: ");
+      Serial.println(gps.time.minute());
+      Serial.print("Velocidade em KM/h: ");
+      Serial.println(gps.speed.kmph());
+      Serial.print("Quantidade Satelites: ");
+      Serial.println(gps.satellites.value());
+
     }
   }
 }
+
+// Documentacao
+// https://arduiniana.org/libraries/tinygpsplus/
