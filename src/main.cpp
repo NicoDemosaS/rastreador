@@ -2,14 +2,15 @@
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
 #include <ESP8266WiFi.h> 
+#include <ESP8266HTTPClient.h>
 
-const int rxPin = 2; // Pino digital 2 para RX
+const int rxPin = D2; // Pino digital 2 para RX
 const int txPin = D3; // Pino digital 3 para TX
 
 
 
-#define WLAN_SSID   "NOME DO WIFI"   // nome da sua rede
-#define WLAN_PASS  "SENHA"   // senha de acesso do seu roteador
+#define WLAN_SSID  "MERCUSYS_FB85"   // nome da sua rede
+#define WLAN_PASS  "11009528"   // senha de acesso do seu roteador
 
 // Client Para requisiçoes Wifi
 WiFiClient client;
@@ -27,20 +28,38 @@ void setup()
   // Conexao Wifi
   WiFi.mode(WIFI_STA); //Habilita o modo estação
   WiFi.begin(WLAN_SSID, WLAN_PASS); //Inicia WiFi com os dados preenchidos 
-  Serial.print("Conectando"); 
+  Serial.print("Conectando");
+
   while (WiFi.status() != WL_CONNECTED) // Tentando conectar na Rede WiFi
   {
     delay(500);
     Serial.print(".");
   }
+
   Serial.println();
   Serial.println(WiFi.localIP());
 }
 
 void loop()
 {
+  if (WiFi.status() == WL_CONNECTED){
 
+    HTTPClient http;
+    	
+  http.begin(client ,"http://jsonplaceholder.typicode.com/users/1");
+  int httpCode = http.GET();
 
+  if (httpCode >0)
+  {
+    String payload = http.getString();
+    Serial.println(payload);
+  }
+
+  http.end();
+
+  }
+
+  delay(5000);
   // Mensagens Filtradas do GPS
   // while (gpsSerial.available() > 0)
   // {
@@ -66,4 +85,3 @@ void loop()
 
 // Documentacao
 // https://arduiniana.org/libraries/tinygpsplus/
-
