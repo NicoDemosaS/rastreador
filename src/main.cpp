@@ -7,7 +7,8 @@
 const int rxPin = D2; // Pino digital 2 para RX
 const int txPin = D3; // Pino digital 3 para TX
 
-
+int lat = 3020;
+int lng = 2030;
 
 #define WLAN_SSID  "MERCUSYS_FB85"   // nome da sua rede
 #define WLAN_PASS  "11009528"   // senha de acesso do seu roteador
@@ -46,8 +47,14 @@ void loop()
 
     HTTPClient http;
     	
-  http.begin(client ,"http://jsonplaceholder.typicode.com/users/1");
-  int httpCode = http.GET();
+  http.begin(client ,"http://192.168.1.111:8000/rastreio/");
+  http.addHeader("Content-Type", "application/json");
+
+
+
+  String jsonPayload = "{\"lat\":" + String(lat) + ",\"lng\":" + String(lng) + "}";
+
+  int httpCode = http.POST(jsonPayload);
 
   if (httpCode >0)
   {
@@ -60,6 +67,8 @@ void loop()
   }
 
   delay(5000);
+
+
   // Mensagens Filtradas do GPS
   // while (gpsSerial.available() > 0)
   // {
