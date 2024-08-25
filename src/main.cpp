@@ -92,5 +92,5 @@ void loop()
   // }
 }
 
-// Documentacao
+// Documentacao do GPS
 // https://arduiniana.org/libraries/tinygpsplus/
