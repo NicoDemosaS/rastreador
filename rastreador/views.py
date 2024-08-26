@@ -14,8 +14,17 @@ def rastreio(request):
 
             latitude = data.get('lat')
             longitude = data.get('lng')
+            altitude = data.get('alt')
+            minutos = data.get('min')
+            velocidade = data.get('kmp')
+            satelites = data.get('sat')
 
-            data_create = Data(Latitude=latitude, Longitude = longitude)
+            data_create = Data(Latitude = latitude, 
+                               Longitude = longitude, 
+                               Altitude = altitude, 
+                               Horario = minutos, 
+                               VelocidadeKM = velocidade, 
+                               Satelites = satelites)
             data_create.save()
 
 
@@ -24,7 +33,7 @@ def rastreio(request):
             response_data = {'status': 'sucess', 'received_data': data}
             return JsonResponse(response_data)
     
-        except:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        except Exception as error:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON', "error": str(error)}, status=400)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
